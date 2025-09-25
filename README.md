@@ -1,40 +1,136 @@
-# TurtleBot3
-<img src="https://raw.githubusercontent.com/ROBOTIS-GIT/emanual/master/assets/images/platform/turtlebot3/logo_turtlebot3.png" width="300">
 
-- Active Branches: noetic, humble, main
-- Legacy Branches: *-devel
+# 🧱 Custom Maze Navigation with TurtleBot3 in Gazebo
 
-## Open Source Projects Related to TurtleBot3
-- [turtlebot3](https://github.com/ROBOTIS-GIT/turtlebot3)
-- [turtlebot3_msgs](https://github.com/ROBOTIS-GIT/turtlebot3_msgs)
-- [turtlebot3_simulations](https://github.com/ROBOTIS-GIT/turtlebot3_simulations)
-- [turtlebot3_manipulation](https://github.com/ROBOTIS-GIT/turtlebot3_manipulation)
-- [turtlebot3_manipulation_simulations](https://github.com/ROBOTIS-GIT/turtlebot3_manipulation_simulations)
-- [turtlebot3_applications](https://github.com/ROBOTIS-GIT/turtlebot3_applications)
-- [turtlebot3_applications_msgs](https://github.com/ROBOTIS-GIT/turtlebot3_applications_msgs)
-- [turtlebot3_machine_learning](https://github.com/ROBOTIS-GIT/turtlebot3_machine_learning)
-- [turtlebot3_autorace](https://github.com/ROBOTIS-GIT/turtlebot3_autorace)
-- [turtlebot3_home_service_challenge](https://github.com/ROBOTIS-GIT/turtlebot3_home_service_challenge)
-- [hls_lfcd_lds_driver](https://github.com/ROBOTIS-GIT/hls_lfcd_lds_driver)
-- [ld08_driver](https://github.com/ROBOTIS-GIT/ld08_driver)
-- [open_manipulator](https://github.com/ROBOTIS-GIT/open_manipulator)
-- [dynamixel_sdk](https://github.com/ROBOTIS-GIT/DynamixelSDK)
-- [OpenCR-Hardware](https://github.com/ROBOTIS-GIT/OpenCR-Hardware)
-- [OpenCR](https://github.com/ROBOTIS-GIT/OpenCR)
+This project demonstrates how to use **TurtleBot3** with **ROS 2**, **Gazebo**, **SLAM**, and **navigation** to autonomously explore a custom maze environment. Below are the step-by-step instructions to set up and run the simulation.
 
-## Documentation, Videos, and Community
+## ✅ Prerequisites
 
-### Official Documentation
-- ⚙️ **[ROBOTIS DYNAMIXEL](https://dynamixel.com/)** – Official website for DYNAMIXEL
-- 📚 **[ROBOTIS e-Manual for Dynamixel SDK](http://emanual.robotis.com/docs/en/software/dynamixel/dynamixel_sdk/overview/)** – Official guide for Dynamixel SDK
-- 📚 **[ROBOTIS e-Manual for TurtleBot3](http://turtlebot3.robotis.com/)** – Official guide for TurtleBot3
-- 📚 **[ROBOTIS e-Manual for OpenMANIPULATOR-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/)** – Official guide for OpenMANIPULATOR-X
+- ROS 2 (e.g. Humble or later) installed and sourced.
+- TurtleBot3 packages installed:
+  - `turtlebot3`
+  - `turtlebot3_simulations`
+  - `nav2_bringup`
+  - `slam_toolbox`
+  - `explore_lite`
+- Gazebo simulator installed and working.
+- Set the environment variable:
 
-### Learning Resources
-- 🎥 **[ROBOTIS YouTube Channel](https://www.youtube.com/@ROBOTISCHANNEL)**
-- 🎥 **[ROBOTIS Open Source YouTube Channel](https://www.youtube.com/@ROBOTISOpenSourceTeam)**
-- 🎥 **[ROBOTIS TurtleBot3 YouTube Playlist](https://www.youtube.com/playlist?list=PLRG6WP3c31_XI3wlvHlx2Mp8BYqgqDURU)** – Video tutorials for TurtleBot3
-- 🎥 **[ROBOTIS OpenMANIPULATOR YouTube Playlist](https://www.youtube.com/playlist?list=PLRG6WP3c31_WpEsB6_Rdt3KhiopXQlUkb)** – Video tutorials for OpenMANIPULATOR
+```bash
+export TURTLEBOT3_MODEL=burger
+```
 
-### Community & Support
-- 💬 **[ROBOTIS Community Forum](https://forum.robotis.com/)** – Get help and discuss with other users
+---
+
+## 🚀 Step 1 – Launch the Custom Maze World
+
+Start Gazebo with your custom map (maze environment) and spawn the TurtleBot3 robot.
+
+```bash
+ros2 launch turtlebot3_gazebo world1.launch.py
+```
+
+✔ This will open Gazebo and load your custom world along with the robot at a predefined location.
+
+---
+
+## 🚀 Step 2 – Start Navigation Stack
+
+Bring up the Navigation2 stack to allow path planning and obstacle avoidance.
+
+```bash
+ros2 launch nav2_bringup navigation_launch.py
+```
+
+✔ This enables autonomous navigation, allowing the robot to plan and follow paths to goal points in the environment.
+
+---
+
+## 🚀 Step 3 – Start SLAM for Mapping
+
+Run SLAM (Simultaneous Localization and Mapping) to dynamically build the map as the robot explores.
+
+```bash
+ros2 launch slam_toolbox online_async_launch.py
+```
+
+✔ The robot will start mapping the environment while keeping track of its position.
+
+---
+
+## 🚀 Step 4 – Visualize in RViz
+
+Launch RViz to visualize the robot, map, sensor data, and navigation paths in real-time.
+
+```bash
+rviz2
+```
+
+✔ Use RViz to debug and monitor the robot’s pose, sensors, and navigation.
+
+---
+
+## 🚀 Step 5 – Enable Autonomous Exploration
+
+Start exploration using the `explore_lite` package. The robot will autonomously explore the environment and build the map.
+
+```bash
+ros2 launch explore_lite explore.launch.py
+```
+
+✔ The robot will roam around, avoid obstacles, and explore unknown areas efficiently.
+
+---
+
+## 📚 Additional Notes
+
+- ✅ **Order Matters**: Launch Gazebo → Navigation → SLAM → RViz → Exploration.
+- ✅ **SLAM vs Navigation**: SLAM builds the map while Navigation plans paths on that map.
+- ✅ **RViz is Essential**: Visualize the robot’s pose, sensor data, and navigation goals.
+- ✅ **Set Environment Variable**: Ensure `TURTLEBOT3_MODEL=burger` is set before running commands.
+- ✅ **Custom Maps**: You can design mazes with corridors and obstacles for testing navigation algorithms.
+- ✅ **Logging & Debugging**: Use terminal outputs and RViz to monitor behavior and diagnose issues.
+- ✅ **Extendibility**: Integrate AI, reinforcement learning, or extra sensors for advanced robotics projects.
+
+---
+
+## 📂 Suggested File Structure
+
+```
+.
+├── maps/
+│   └── maze_world.world
+├── launch/
+│   ├── world1.launch.py
+│   ├── navigation_launch.py
+│   ├── online_async_launch.py
+│   └── explore.launch.py
+├── config/
+│   ├── nav2_params.yaml
+│   └── slam_toolbox_params.yaml
+└── README.md
+```
+
+---
+
+## 🎯 Learnings from this Setup
+
+- Integration of **SLAM** and **Navigation** with TurtleBot3.
+- Real-time sensor data processing using **Lidar** and **IMU**.
+- Building maps of unknown environments using **online SLAM**.
+- Autonomous exploration strategies with **explore_lite**.
+- Visualization and debugging using **RViz**.
+- Structuring ROS 2 projects for scalability and collaboration.
+
+---
+
+## 📌 Tips for Further Development
+
+- ✅ Tune SLAM parameters like map resolution and update rate for better accuracy.
+- ✅ Experiment with different exploration algorithms and obstacle avoidance strategies.
+- ✅ Integrate with AI frameworks for path optimization or adaptive exploration.
+- ✅ Use recording tools like `rosbag` to capture sessions for offline analysis.
+- ✅ Add logging and monitoring dashboards to track performance and errors.
+
+---
+
+Feel free to explore, experiment, and expand this setup to build advanced robotics applications!
